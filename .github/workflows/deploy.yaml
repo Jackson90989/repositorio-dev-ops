@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Image, Tag, and Push image to Amazon ECR
         run:  | 
-          docker build -t meu-website:v1.0
+          docker build -t meu-website:v1.0 .
           docker tag meu-website:v1 656580157831.dkr.ecr.us-east-2.amazonaws.com/site_prod:v1.0
           docker push 656580157831.dkr.ecr.us-east-2.amazonaws.com/site_prod:v1.0
 
