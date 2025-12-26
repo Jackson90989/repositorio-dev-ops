@@ -38,6 +38,7 @@ jobs:
           docker push 656580157831.dkr.ecr.us-east-2.amazonaws.com/site_prod:v1.0
 
   job2:
+    needs: job1
     name: deploy_ec2
     env: 
       INSTANCE_KEY: ${{secrets.INSTANCE_KEY}}
@@ -46,11 +47,10 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - name: Deploy EC2 SSH
-        needs: job1
         run: |
-          echo "$INSTANCE_KEY" > chave-site.pem
+          echo "$INSTANCE_KEY" > chave-site-prod.pem
           chmod 400 chave-site.pem
-          ssh -i chave-site-prod.pem -o StricHostKeyChecking=no ec2_user@$PUBLIC_IP << EOF
+          ssh -i chave-site-prod.pem -o StrictHostKeyChecking=no ec2_user@$PUBLIC_IP << EOF
             aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 656580157831.dkr.ecr.us-east-2.amazonaws.com
             docker pull 656580157831.dkr.ecr.us-east-2.amazonaws.com:v1.0
             echo "parando container antigo site"
