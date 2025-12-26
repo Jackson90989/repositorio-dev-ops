@@ -39,10 +39,33 @@ jobs:
 
   job2:
     name: deploy_ec2
+    env: 
+      INSTANCE_KEY: ${{secrets.INSTANCE_KEY}}
+      PUBLIC_IP: ${{secrets.PUBLIC_IP}}
+
     runs-on: ubuntu-latest
     steps: 
       - name: Deploy EC2 SSH
+        needs: job1
         run: |
-          ssh -i chave-site-prod.pem ec2_user@18.222.40.67
+          echo "$INSTANCE_KEY" > chave-site.pem
+          chmod 400 chave-site.pem
+          ssh -i chave-site-prod.pem -o StricHostKeyChecking=no ec2_user@$PUBLIC_IP << EOF
+            aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 656580157831.dkr.ecr.us-east-2.amazonaws.com
+            docker pull 656580157831.dkr.ecr.us-east-2.amazonaws.com:v1.0
+            echo "parando container antigo site"
+            docker stop site || true
+            echo "removendo o container antigo"
+            docker rm site ||  true
+            echo "rodando nova tag da imagem"
+            docker run -d -p 80:80 --name site 656580157831.dkr.ecr.us-east-2.amazonaws.com:v1.0
+            echo "parabens! imagem atualizada"
+            docker ps
+          EOF
+
+          rm chave-site.pem
+
+
+
 
 
