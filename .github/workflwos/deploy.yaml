@@ -52,7 +52,7 @@ jobs:
           chmod 400 chave-site-prod.pem
           ssh -i chave-site-prod.pem -o StrictHostKeyChecking=no ec2-user@$PUBLIC_IP << EOF
             aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 656580157831.dkr.ecr.us-east-2.amazonaws.com
-            docker pull 656580157831.dkr.ecr.us-east-2.amazonaws.com:v1.0
+            docker pull 656580157831.dkr.ecr.us-east-2.amazonaws.com/site_prod:v1.0
             echo "parando container antigo site"
             docker stop site || true
             echo "removendo o container antigo"
