@@ -61,6 +61,8 @@ jobs:
             docker run -d -p 80:80 --name site 656580157831.dkr.ecr.us-east-2.amazonaws.com:v1.0
             echo "parabens! imagem atualizada"
             docker ps
+
+            echo"finish"
           EOF
 
           rm chave-site-prod.pem
