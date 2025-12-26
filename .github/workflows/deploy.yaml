@@ -59,7 +59,7 @@ jobs:
             docker rm site ||  true
             echo "rodando nova tag da imagem"
             docker run -d -p 80:80 --name site 656580157831.dkr.ecr.us-east-2.amazonaws.com:v1.0
-            echo "parabens! imagem atualizad"
+            echo "parabens! imagem atualizado"
             docker ps
 
             echo"finish"
